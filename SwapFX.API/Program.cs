@@ -7,7 +7,7 @@ using SwapFX.CORE.Infrastructure.Shared;
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
 var cnx = config.GetConnectionString("DevConnection");
-builder.Services.AddDbContext<SwapFXDbContext>(options => options.UseSqlServer(cnx));
+builder.Services.AddDbContext<SwapFXDbContext>(options => options.UseNpgsql(cnx));
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<IOfertaRepository, OfertaRepository>();
