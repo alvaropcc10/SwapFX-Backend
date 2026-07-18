@@ -19,7 +19,7 @@ public class DisputaService : IDisputaService
         await _disputas.AddAsync(new Disputa {
             TransaccionId = dto.TransaccionId, UsuarioReportanteId = usuarioId,
             Motivo = dto.Motivo, Descripcion = dto.Descripcion,
-            Estado = "ABIERTA", FechaReporte = DateTime.Now
+            Estado = "ABIERTA", FechaReporte = DateTime.UtcNow
         });
         t.EstadoActual = Parametros.EstadosTransaccion.EnDisputa;
         await _transacciones.UpdateAsync(t);
@@ -42,7 +42,7 @@ public class DisputaService : IDisputaService
         if (d == null) return RespuestaApi<bool>.Error("Disputa no encontrada.");
         d.Estado = "RESUELTA";
         d.Resolucion = dto.Resolucion;
-        d.FechaResolucion = DateTime.Now;
+        d.FechaResolucion = DateTime.UtcNow;
         d.AdminResolutorId = adminId;
         await _disputas.UpdateAsync(d);
         if (d.Transaccion != null) {

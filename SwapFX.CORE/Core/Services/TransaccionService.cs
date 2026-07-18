@@ -27,7 +27,7 @@ public class TransaccionService : ITransaccionService
         var vendedorId = oferta.Tipo == "V" ? oferta.UsuarioId!.Value : usuarioId;
 
         var transaccion = new Transaccion {
-            Codigo = $"TX-{DateTime.Now:yyyyMMdd}-{new Random().Next(1000, 9999)}",
+            Codigo = $"TX-{DateTime.UtcNow:yyyyMMdd}-{new Random().Next(1000, 9999)}",
             OfertaCompraId = dto.OfertaId,
             OfertaVentaId = dto.OfertaId,
             CompradorId = compradorId,
@@ -36,7 +36,7 @@ public class TransaccionService : ITransaccionService
             MontoDestino = oferta.Monto,
             TipoCambioAplicado = oferta.TipoCambio,
             EstadoActual = Parametros.EstadosTransaccion.Iniciada,
-            FechaInicio = DateTime.Now,
+            FechaInicio = DateTime.UtcNow,
             IsActive = true
         };
 
@@ -46,7 +46,7 @@ public class TransaccionService : ITransaccionService
             EstadoAnterior = "",
             EstadoNuevo = Parametros.EstadosTransaccion.Iniciada,
             UsuarioResponsableId = usuarioId,
-            FechaCambio = DateTime.Now
+            FechaCambio = DateTime.UtcNow
         });
 
         await _notificaciones.CrearAsync(vendedorId, "TRANSACCION", $"Nueva transacción {creada.Codigo} iniciada.");
@@ -85,7 +85,7 @@ public class TransaccionService : ITransaccionService
             FormatoArchivo = dto.FormatoArchivo,
             NumeroOperacion = dto.NumeroOperacion,
             FechaTransferencia = dto.FechaTransferencia,
-            FechaSubida = DateTime.Now
+            FechaSubida = DateTime.UtcNow
         });
 
         var estadoAnterior = t.EstadoActual!;
@@ -94,7 +94,7 @@ public class TransaccionService : ITransaccionService
         await _transacciones.AddBitacoraAsync(new BitacoraTransaccion {
             TransaccionId = t.Id, EstadoAnterior = estadoAnterior,
             EstadoNuevo = Parametros.EstadosTransaccion.PagoReportado,
-            UsuarioResponsableId = usuarioId, FechaCambio = DateTime.Now
+            UsuarioResponsableId = usuarioId, FechaCambio = DateTime.UtcNow
         });
         await _notificaciones.CrearAsync(t.VendedorId!.Value, "PAGO", $"El comprador reportó el pago en la transacción {t.Codigo}.");
         return RespuestaApi<bool>.Ok(true, "Comprobante reportado.");
@@ -110,12 +110,12 @@ public class TransaccionService : ITransaccionService
 
         var estadoAnterior = t.EstadoActual;
         t.EstadoActual = Parametros.EstadosTransaccion.Finalizada;
-        t.FechaFinalizacion = DateTime.Now;
+        t.FechaFinalizacion = DateTime.UtcNow;
         await _transacciones.UpdateAsync(t);
         await _transacciones.AddBitacoraAsync(new BitacoraTransaccion {
             TransaccionId = t.Id, EstadoAnterior = estadoAnterior,
             EstadoNuevo = Parametros.EstadosTransaccion.Finalizada,
-            UsuarioResponsableId = usuarioId, FechaCambio = DateTime.Now
+            UsuarioResponsableId = usuarioId, FechaCambio = DateTime.UtcNow
         });
         await _notificaciones.CrearAsync(t.CompradorId!.Value, "FINALIZADA", $"Transacción {t.Codigo} finalizada exitosamente.");
         return RespuestaApi<bool>.Ok(true, "Pago confirmado. Transacción finalizada.");
@@ -134,7 +134,7 @@ public class TransaccionService : ITransaccionService
         await _transacciones.AddBitacoraAsync(new BitacoraTransaccion {
             TransaccionId = t.Id, EstadoAnterior = estadoAnterior,
             EstadoNuevo = Parametros.EstadosTransaccion.Cancelada,
-            UsuarioResponsableId = usuarioId, Comentario = motivo, FechaCambio = DateTime.Now
+            UsuarioResponsableId = usuarioId, Comentario = motivo, FechaCambio = DateTime.UtcNow
         });
         var otroUsuario = t.CompradorId == usuarioId ? t.VendedorId!.Value : t.CompradorId!.Value;
         await _notificaciones.CrearAsync(otroUsuario, "CANCELADA", $"La transacción {t.Codigo} fue cancelada.");

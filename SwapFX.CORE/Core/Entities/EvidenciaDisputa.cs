@@ -7,6 +7,6 @@ public partial class EvidenciaDisputa
     public string NombreArchivo { get; set; } = null!;
     public string RutaArchivo { get; set; } = null!;
     public string FormatoArchivo { get; set; } = null!;
-    public DateTime FechaSubida { get; set; } = DateTime.Now;
+    public DateTime FechaSubida { get; set; } = DateTime.UtcNow;
     public virtual Disputa? Disputa { get; set; }
 }

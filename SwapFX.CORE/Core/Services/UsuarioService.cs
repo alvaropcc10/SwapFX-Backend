@@ -37,7 +37,7 @@ public class UsuarioService : IUsuarioService
             Password = dto.Password,
             IsActive = true,
             Tipo = "U",
-            FechaRegistro = DateOnly.FromDateTime(DateTime.Now),
+            FechaRegistro = DateOnly.FromDateTime(DateTime.UtcNow),
             IdentidadValidada = false
         };
         return await _usuarioRepository.SignUp(usuario);

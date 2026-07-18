@@ -17,7 +17,7 @@ public class CalificacionService : ICalificacionService
         await _calificaciones.AddAsync(new Calificacion {
             TransaccionId = dto.TransaccionId, UsuarioCalificadorId = calificadorId,
             UsuarioCalificadoId = dto.UsuarioCalificadoId, Puntuacion = dto.Puntuacion,
-            Comentario = dto.Comentario, FechaCalificacion = DateTime.Now
+            Comentario = dto.Comentario, FechaCalificacion = DateTime.UtcNow
         });
         return RespuestaApi<bool>.Ok(true, "Calificación registrada.");
     }

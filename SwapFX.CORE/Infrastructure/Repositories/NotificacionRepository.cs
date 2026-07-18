@@ -24,7 +24,7 @@ public class NotificacionRepository : INotificacionRepository
     {
         _context.Notificacion.Add(new Notificacion {
             UsuarioId = usuarioId, Tipo = tipo, Mensaje = mensaje,
-            Leida = false, FechaCreacion = DateTime.Now
+            Leida = false, FechaCreacion = DateTime.UtcNow
         });
         await _context.SaveChangesAsync();
     }

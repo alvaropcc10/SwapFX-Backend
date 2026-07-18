@@ -16,7 +16,7 @@ public class DocumentoIdentidadService : IDocumentoIdentidadService
             NumeroDoc = dto.NumeroDoc,
             RutaArchivo = dto.RutaArchivo,
             Estado = dto.Estado,
-            FechaSubida = DateTime.Now
+            FechaSubida = DateTime.UtcNow
         });
         return RespuestaApi<bool>.Ok(true, "Documento enviado para revisión.");
     }

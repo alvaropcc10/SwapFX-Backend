@@ -39,7 +39,7 @@ public class OfertaService : IOfertaService
         var oferta = new Oferta {
             UsuarioId = usuarioId, Tipo = dto.Tipo, MonedaOrigenId = dto.MonedaOrigenId,
             MonedaDestinoId = dto.MonedaDestinoId, Monto = dto.Monto, TipoCambio = dto.TipoCambio,
-            FechaPublicacion = DateTime.Now, FechaExpiracion = DateTime.Now.AddHours(dto.ValidezHoras),
+            FechaPublicacion = DateTime.UtcNow, FechaExpiracion = DateTime.UtcNow.AddHours(dto.ValidezHoras),
             Estado = "PUBLICADA", Notas = dto.Notas, IsActive = true
         };
         return await _ofertaRepository.CreateOferta(oferta);
