@@ -38,8 +38,15 @@ public class TransaccionController : ControllerBase
     [HttpPost("comprobante")]
     public async Task<IActionResult> ReportarComprobante([FromBody] ReportarComprobanteDTO dto)
     {
-        var result = await _transacciones.ReportarComprobanteAsync(GetUsuarioId(), dto);
-        return result.Exito ? Ok(result) : BadRequest(result);
+        try
+        {
+            var result = await _transacciones.ReportarComprobanteAsync(GetUsuarioId(), dto);
+            return result.Exito ? Ok(result) : BadRequest(result);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { error = ex.Message, inner = ex.InnerException?.Message });
+        }
     }
 
     [HttpPut("{id}/confirmar")]
