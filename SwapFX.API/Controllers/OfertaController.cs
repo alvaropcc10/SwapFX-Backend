@@ -29,11 +29,18 @@ public class OfertaController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateOferta([FromBody] CreateOfertaDTO dto)
     {
-        var usuarioIdClaim = User.FindFirst("UsuarioId")?.Value;
-        if (usuarioIdClaim == null) return Unauthorized();
-        var usuarioId = int.Parse(usuarioIdClaim);
-        var id = await _ofertaService.CreateOferta(dto, usuarioId);
-        return Ok(id);
+        try
+        {
+            var usuarioIdClaim = User.FindFirst("UsuarioId")?.Value;
+            if (usuarioIdClaim == null) return Unauthorized();
+            var usuarioId = int.Parse(usuarioIdClaim);
+            var id = await _ofertaService.CreateOferta(dto, usuarioId);
+            return Ok(id);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { error = ex.Message, inner = ex.InnerException?.Message });
+        }
     }
     [HttpPut]
     public async Task<IActionResult> UpdateOferta([FromBody] UpdateOfertaDTO dto)
